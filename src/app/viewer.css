@@ -1,0 +1,7 @@
+.viewer-loading { display: grid; place-items: center; min-height: 100dvh; color: var(--text-secondary); }
+.viewer-login { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--app-bg); }
+.viewer-login-form { width: 100%; max-width: 380px; display: grid; gap: 24px; }
+.viewer-login-form h1 { font-size: 26px; font-weight: 650; margin: 0 0 12px; letter-spacing: 0; }
+.viewer-error { color: var(--danger-color, #b42318); overflow-wrap: anywhere; font-size: 13px; margin: 0; }
+.viewer-brand-name { display: grid; align-content: center; width: 79px; height: 32px; flex-shrink: 0; color: var(--text-primary); text-align: left; font-size: 12px; line-height: 1.15; letter-spacing: 0; }
+.viewer-brand-name strong { font-size: 14px; font-weight: 700; }
