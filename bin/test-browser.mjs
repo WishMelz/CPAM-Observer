@@ -72,7 +72,7 @@ try {
     console.log(JSON.stringify({ errors, failed, fixtureErrors, text: await page.locator('body').innerText(), output }, null, 2));
     throw error;
   }
-  const cookie = (await context.cookies()).find((entry) => entry.name === 'cpam_next_session');
+  const cookie = (await context.cookies()).find((entry) => entry.name === 'cpam_observer_session');
   assert.equal(cookie.httpOnly, true);
   assert.equal(cookie.sameSite, 'Strict');
   const denied = await context.request.post(`${origin}/api/upstream/v0/management/api-call`, { data: {} });

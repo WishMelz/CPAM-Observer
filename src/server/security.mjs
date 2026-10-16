@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
-export const COOKIE_NAME = 'cpam_next_session';
+export const COOKIE_NAME = 'cpam_observer_session';
 export const SESSION_SECONDS = 8 * 60 * 60;
 
 export function configuration(env = process.env) {

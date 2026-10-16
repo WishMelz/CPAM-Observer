@@ -14,7 +14,7 @@
 
 Next App Router 提供入口和服务端 API，原页面在客户端运行。不是静态导出项目，可运行 Node.js 服务，或通过 OpenNext 部署到 Cloudflare Workers。没有改动原项目或 `CPAM-Detail`。
 
-项目包名为 `cpam-observer`。为兼容现有部署，目录和 Cloudflare Worker 标识仍保留 `cpam-next`，环境变量与会话配置不变。
+项目包名和 Cloudflare Worker 标识统一为 `cpam-observer`，会话 Cookie 为 `cpam_observer_session`。环境变量名称不变。
 
 ## 配置
 
@@ -64,15 +64,17 @@ npm run start -- --hostname 127.0.0.1 --port 3100
 
 | 设置 | 值 |
 | --- | --- |
-| Worker name | `cpam-next` |
-| Root directory | 仓库包含本工作区各项目时填 `cpam-next`；仓库只有此项目内容时填 `/` |
+| Worker name | `cpam-observer` |
+| Root directory | 本仓库填 `/`；若放入其他仓库的子目录，填写该项目子目录的实际路径 |
 | Build command | `npm run build:cf` |
 | Deploy command | `npm run deploy:cf` |
 | Node.js version | 22 或以上，可在构建环境设置 `NODE_VERSION=22` |
 
 构建只需要安装依赖，不需要业务密钥。首次可以先部署，页面会显示未配置，然后再按下表设置运行时变量。不要把业务变量只填在 **Build variables and secrets**；那里不是 Worker 的运行时设置。
 
-Worker 名称来自 [wrangler.jsonc](wrangler.jsonc) 的 `name`，当前为 `cpam-next`。改名时也要同步修改 `services` 中 `WORKER_SELF_REFERENCE` 的 `service`，并与控制台 Worker 名称一致。
+Worker 名称来自 [wrangler.jsonc](wrangler.jsonc) 的 `name`，当前为 `cpam-observer`。改名时也要同步修改 `services` 中 `WORKER_SELF_REFERENCE` 的 `service`，并与控制台 Worker 名称一致。
+
+从旧名称迁移时，新名称指向不同的 Worker，不会自动搬迁原 Worker 的配置。在新 Worker 中重新设置下方运行时变量和 Secret，并按需迁移自定义域名、更新 `CPAM_PUBLIC_ORIGIN`。确认新服务可用后再停用旧服务。会话 Cookie 已同步改名，更新后需要重新登录。
 
 ### 控制台运行时变量
 

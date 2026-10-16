@@ -15,6 +15,8 @@ const { unstable_dev } = await import('wrangler');
 const compiledEnvironment = await import('../.open-next/cloudflare/next-env.mjs');
 for (const mode of ['production', 'development', 'test']) assert.deepEqual(compiledEnvironment[mode], {});
 const configuration = JSON.parse(await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+assert.equal(configuration.name, 'cpam-observer');
+assert.equal(configuration.services.find((service) => service.binding === 'WORKER_SELF_REFERENCE')?.service, configuration.name);
 assert.equal(configuration.keep_vars, true);
 assert.equal(configuration.vars, undefined);
 const requests = [];
@@ -64,6 +66,7 @@ try {
   });
   assert.equal(login.status, 200);
   const cookie = login.headers.get('set-cookie');
+  assert.match(cookie, /^cpam_observer_session=/);
   for (const attribute of [/HttpOnly/i, /SameSite=Strict/i, /Secure/i]) assert.match(cookie, attribute);
   const headers = { Cookie: cookie.split(';')[0], Origin: origin };
   assert.equal((await (await worker.fetch('/api/session', { headers })).json()).authenticated, true);

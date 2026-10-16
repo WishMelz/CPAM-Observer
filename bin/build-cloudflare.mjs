@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const staging = await mkdtemp(join(tmpdir(), 'cpam-next-cf-'));
+const staging = await mkdtemp(join(tmpdir(), 'cpam-observer-cf-'));
 const environment = {
   ...process.env,
   CPA_MANAGER_URL: '',
