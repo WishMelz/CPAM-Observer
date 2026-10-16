@@ -9,13 +9,15 @@ test('configuration requires independent keys and a fixed upstream URL', () => {
   assert.throws(() => configuration({ CPA_MANAGER_URL: 'https://user:pass@example.test', CPA_MANAGER_KEY: 'upstream', CPAM_VIEWER_KEY: key }));
   assert.equal(configuration({ CPA_MANAGER_URL: 'https://example.test/prefix', CPA_MANAGER_KEY: 'upstream', CPAM_VIEWER_KEY: key }).base.pathname, '/prefix');
 });
-test('viewer keys contain exactly six English letters without normalization', () => {
+test('viewer keys contain at least six English letters without normalization', () => {
   const env = { CPA_MANAGER_URL: 'https://example.test', CPA_MANAGER_KEY: 'upstream' };
-  for (const viewerKey of ['abcdef', 'ABCDEF', key]) {
+  for (const viewerKey of ['abcdef', 'ABCDEF', key, 'abcdefg', 'a'.repeat(24), 'AbCd'.repeat(16)]) {
     assert.equal(configuration({ ...env, CPAM_VIEWER_KEY: viewerKey }).viewerKey, viewerKey);
+    assert.equal(validSession(issueSession(viewerKey), viewerKey), true);
+    assert.throws(() => configuration({ ...env, CPA_MANAGER_KEY: viewerKey, CPAM_VIEWER_KEY: viewerKey }));
   }
-  for (const viewerKey of [undefined, '', 'abcde', 'abcdefg', 'a'.repeat(24), 'abcde1', 'abcde!', ' abcde', 'abcde ', 'abcdef\n', 'abcdef\r\n', '\u00e9bcdef', '\u4e2dbcdef']) {
-    assert.throws(() => configuration({ ...env, CPAM_VIEWER_KEY: viewerKey }), /exactly 6 English letters/);
+  for (const viewerKey of [undefined, '', 'abcde', 'abcde1', 'abcde!', ' abcde', 'abcde ', 'abcdef1', 'abcdef!', ' abcdef', 'abcdef ', 'abcdef\n', 'abcdef\r\n', '\u00e9bcdef', '\u4e2dbcdef']) {
+    assert.throws(() => configuration({ ...env, CPAM_VIEWER_KEY: viewerKey }), /at least 6 English letters/);
   }
 });
 test('sessions expire, resist forgery and rotate with the viewer key', () => {

@@ -8,7 +8,7 @@ export function configuration(env = process.env) {
   const upstreamKey = env.CPA_MANAGER_KEY || '';
   const viewerKey = env.CPAM_VIEWER_KEY || '';
   if (!env.CPA_MANAGER_URL || !['http:', 'https:'].includes(base.protocol) || base.username || base.password || base.search || base.hash) throw new Error('Invalid CPA_MANAGER_URL');
-  if (!upstreamKey || viewerKey.length !== 6 || /[^A-Za-z]/.test(viewerKey) || equalSecret(upstreamKey, viewerKey)) throw new Error('Configure separate CPA_MANAGER_KEY and CPAM_VIEWER_KEY (exactly 6 English letters)');
+  if (!upstreamKey || viewerKey.length < 6 || /[^A-Za-z]/.test(viewerKey) || equalSecret(upstreamKey, viewerKey)) throw new Error('Configure separate CPA_MANAGER_KEY and CPAM_VIEWER_KEY (at least 6 English letters)');
   return { base, upstreamKey, viewerKey };
 }
 

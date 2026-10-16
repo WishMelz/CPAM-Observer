@@ -26,13 +26,13 @@ Next App Router 提供入口和服务端 API，原页面在客户端运行。不
 | --- | --- |
 | `CPA_MANAGER_URL` | **Manager Server** 基址，例如 `http://127.0.0.1:8021`；不是供应商 API、`/v1` 或 `/v0/management` 地址。支持部署路径前缀，不接受 URL 用户密码、查询参数和片段。 |
 | `CPA_MANAGER_KEY` | Manager Server 管理密钥，仅供服务端请求上游。 |
-| `CPAM_VIEWER_KEY` | 此查看器独立登录密钥，必须恰好为 6 个英文字母（A-Z、a-z），区分大小写，不接受数字、符号或空白，不能与管理密钥相同。 |
+| `CPAM_VIEWER_KEY` | 此查看器独立登录密钥，至少 6 个英文字母（A-Z、a-z），区分大小写，不接受数字、符号或空白，不能与管理密钥相同。 |
 | `CPAM_COOKIE_SECURE` | 本地 HTTP 使用 `false`；HTTPS 部署设为 `true`。 |
 | `CPAM_PUBLIC_ORIGIN` | HTTPS 反向代理时填写准确的对外来源，例如 `https://viewer.example.com`，不要包含路径、查询参数；本地直连可留空。 |
 
 浏览器只输入 `CPAM_VIEWER_KEY`。不要把管理密钥放进浏览器，也不要使用 `NEXT_PUBLIC_` 前缀。配置修改后重启 Node 服务，或在 Cloudflare 控制台点击 Deploy。未配置时显示配置提示，不使用测试数据代替真实数据。
 
-6 位字母密钥更容易被猜测，公网部署建议配合 Cloudflare Access 等访问限制，不应仅依赖短密钥和应用内限流。
+6 位仅为最低长度，建议使用更长的随机字母密钥。公网部署建议配合 Cloudflare Access 等访问限制，不应仅依赖短密钥和应用内限流。
 
 Manager Server 必须已经连接 CPA 并启用所需的用量采集功能。此查看器不会帮上游初始化、修复数据库或启动采集器。
 
@@ -86,7 +86,7 @@ Worker 名称来自 [wrangler.jsonc](wrangler.jsonc) 的 `name`，当前为 `cpa
 | `CPAM_COOKIE_SECURE` | Text | `true` |
 | `CPAM_PUBLIC_ORIGIN` | Text | 查看器实际访问来源，例如 `https://viewer.example.com`；不是上游地址，不包含路径；使用 `workers.dev` 时填对应 HTTPS 来源 |
 | `CPA_MANAGER_KEY` | Secret | Manager Server 管理密钥 |
-| `CPAM_VIEWER_KEY` | Secret | 查看器登录密钥，恰好 6 个英文字母（A-Z、a-z），区分大小写，且不能与管理密钥相同 |
+| `CPAM_VIEWER_KEY` | Secret | 查看器登录密钥，至少 6 个英文字母（A-Z、a-z），区分大小写，且不能与管理密钥相同 |
 
 添加或修改后点击 **Deploy**。浏览器登录时只输入 `CPAM_VIEWER_KEY`。更换自定义域名后也要更新 `CPAM_PUBLIC_ORIGIN`。`keep_vars: true` 保留控制台已有普通变量；Secret 也不会被代码部署覆盖。本项目不在 Wrangler 配置中声明业务变量值。
 
